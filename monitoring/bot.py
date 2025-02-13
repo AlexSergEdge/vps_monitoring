@@ -5,7 +5,7 @@ from functools import wraps
 from core.config import settings
 from telegram import Update, Bot
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
-from ssh.runner import run_client
+# from ssh.runner import run_client
 
 settings.ALLOWED_USERS
 
@@ -32,8 +32,9 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 @restricted_access
 async def get_data_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Just example call
-    result = await run_client('x.x.x.x', 22, 'root', '/path/to/key', 'ls /opt')
-    await update.message.reply_text(result)
+    # result = await run_client('x.x.x.x', 22, 'root', '/path/to/key', 'ls /opt')
+    # await update.message.reply_text(result)
+    await update.message.reply_text('Test')
 
 
 @restricted_access

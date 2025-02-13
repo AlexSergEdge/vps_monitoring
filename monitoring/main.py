@@ -1,48 +1,32 @@
+import asyncio
 import yaml
-import json
+
 from bot import send_data
-from typing import Optional, List
-from pydantic import BaseModel, ValidationError
+
+from pydantic import ValidationError
 
 from core.config import settings
+from ssh.runner import LocalRunner, RemoteRunner
+from schemas import Servers
 
 
-# Config validation
-class Server(BaseModel):
-    ip: str
-    name: str
-    ssh: Optional[dict] = None  # TODO: add validations for SSH if exists
-    modules: list
-
-
-class Servers(BaseModel):
-    servers: List[Server]
-
-
-# TODO: here we iterate over config and send aync commands
-def collect_data():
+async def collect_data():
     with open(settings.SERVERS_CONFIG, 'r') as servers:
         servers = yaml.safe_load(servers)
     try:
         valid_servers = Servers(**servers)
     except ValidationError as e:
-        print('Config is invalid! See example config')
+        print(f'Config is invalid! {e}')  # TODO: more info on error
         return
 
     for server in valid_servers.servers:
         print(server.ip)
         
         if server.ssh:
-            print(server.ssh.get('ssh_user', None))
-
-    
-
-collect_data()
+            print(server.ssh.ssh_user)
 
 
-
-
-
+asyncio.run(collect_data())
 
 
 # asyncio.run(send_data('Test'))
