@@ -14,5 +14,6 @@ class MonitoringSettings:
     TELEGRAM_BOT_USERNAME = os.getenv("TELEGRAM_BOT_USERNAME")
     TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")  # This can be changed to group or personal chat
     SERVERS_CONFIG = os.getenv("SERVERS_CONFIG")
+    ALLOWED_USERS = os.getenv("ALLOWED_USERS").split(',')
 
 settings = MonitoringSettings()
