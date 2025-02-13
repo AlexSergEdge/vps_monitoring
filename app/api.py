@@ -21,7 +21,7 @@ def start_app():
         version=settings.APP_VERSION
     )
     app.mount("/static", StaticFiles(directory="static"), name="static")
-    # autocreate_tables()
+    autocreate_tables()
     return app
 
 app = start_app()

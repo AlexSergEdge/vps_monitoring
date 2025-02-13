@@ -12,7 +12,10 @@ class Vps(Base):
     ssh_port = Column(Integer, nullable=True)
     ssh_user = Column(String, nullable=True)
     ssh_public_key_path = Column(String, nullable=True)
+
     country = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.now, nullable=False)
 
     history = relationship("History", back_populates="vps")
+
+    modules = relationship('Module', secondary='vpsmodule', back_populates='vpses')
