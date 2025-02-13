@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Monitoring</title>
+        <link rel="stylesheet" href="{{ url_for('static', path='css/bootstrap.min.css') }}">
+        <script src="{{ url_for('static', path='js/bootstrap.bundle.min.js') }}"></script>
+    </head>
+    <body>
+        <div class="container">
+            <h1>VPS monitoring service is up</h1>
+            <p>
+                Welcome, {{ name }}!
+                <a href="{{ url_for('read_root') }}">Link to root page</a>
+            </p>
+        </div>
+    </body>
+</html>
