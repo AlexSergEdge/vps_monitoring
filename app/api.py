@@ -4,7 +4,6 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from core.config import settings
-from monitoring.main import get_name
 
 from database.session import engine
 from database.base import Base
@@ -32,7 +31,7 @@ templates = Jinja2Templates(directory="templates")
 
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):
-    name = get_name()
+    name = 'Alex'
     return templates.TemplateResponse(
         request=request, name="index.html", context={"name": name}
     )
