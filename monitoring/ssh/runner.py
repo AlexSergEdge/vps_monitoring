@@ -3,7 +3,11 @@ import asyncssh
 import sys
 
 
-class RemoteRunner():
+class Runner():
+    pass
+
+
+class RemoteRunner(Runner):
 
     def __init__(self, ip_addr, port, username, key):
         self.ip_addr = ip_addr
@@ -11,8 +15,7 @@ class RemoteRunner():
         self.username = username
         self.key = key
 
-    async def run(self, command: list) -> None:
-        command = " ".join(command)
+    async def run(self, command: str) -> None:
         async with asyncssh.connect(self.ip_addr, port=self.port, username=self.username
                                     , client_keys=[self.key]) as conn:
             try:
@@ -23,11 +26,11 @@ class RemoteRunner():
                 print(f'Process exited with status {exc.exit_status}', file=sys.stderr)
 
 
-class LocalRunner():
+class LocalRunner(Runner):
 
-    async def run(self, command: list) -> None:
-        process = await asyncio.create_subprocess_exec(
-            *command,
+    async def run(self, command: str) -> None:
+        process = await asyncio.create_subprocess_shell(
+            command,
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE
         )
@@ -36,14 +39,3 @@ class LocalRunner():
             print(f'Process exited with error: {stderr.decode()}')
 
         return stdout.decode()
-
-
-# Usage:
-
-# local_runner = LocalRunner()
-# res = asyncio.run(local_runner.run(['ls', '/opt']))
-# print(res)
-
-# remote_runner = RemoteRunner('xxx.xxx.xxx.xxx', 33, 'root', '/path/to/key')
-# res = asyncio.run(remote_runner.run(['ls', '/opt']))
-# print(res)

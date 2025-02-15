@@ -3,12 +3,10 @@ from pydantic import BaseModel
 
 
 # TODO: create @validators
-
-
 class SshConnInfo(BaseModel):
     ssh_port: int
     ssh_user: str
-    ssh_pubkey_path: str
+    ssh_privkey_path: str
 
 
 class Server(BaseModel):

@@ -6,7 +6,7 @@ servers:
     ssh:  # is optional
       ssh_port: 22
       ssh_user: 'user'
-      ssh_pubkey_path: '/path/to/key'
+      ssh_privkey_path: '/path/to/key'
     modules:
       - 'sysinfo'
 
