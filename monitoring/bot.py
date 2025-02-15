@@ -16,6 +16,7 @@ logging.basicConfig(
 
 
 def restricted_access(func):
+    """Allow access only for user/group ids from ALLOWED_USERS list"""
     @wraps(func)
     async def wrapper(update, context, *args, **kwargs):
         user_id = update.effective_user.id
@@ -65,8 +66,12 @@ def remove_job_if_exists(job_name, context: ContextTypes.DEFAULT_TYPE) -> bool:
 
 @restricted_access
 async def set_scheduled_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    
+    # chat_id is taken from current chat 
+    # (can be user chat with bot or group, where bot is added)
     chat_id = update.effective_message.chat_id
 
+    # default interval is taken from settings
     interval = int(settings.DEFAULT_CHECK_INTERVAL)
     try:
         if len(context.args) == 1:
