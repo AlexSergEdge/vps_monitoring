@@ -2,6 +2,8 @@ from typing import Optional, List
 from pydantic import BaseModel
 
 
+# Schemas to validate config file
+
 # TODO: create @validators
 class SshConnInfo(BaseModel):
     ssh_port: int

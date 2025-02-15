@@ -1,5 +1,5 @@
 # System module to collect system info from server
-from ssh.runner import Runner
+from runners.runner import Runner
 
 WG_EMOJI = '\U0001f5ff'
 GREEN_ROUND_EMOJI = '\U0001f7e2'

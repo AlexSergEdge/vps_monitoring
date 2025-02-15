@@ -2,13 +2,14 @@ import logging
 
 from functools import wraps
 
-from core.config import settings
+from config.config import settings
 from telegram import Update, Bot
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 
 from main import collect_data
 
 
+# TODO: logging
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
 )

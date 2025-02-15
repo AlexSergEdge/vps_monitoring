@@ -5,13 +5,15 @@ import yaml
 
 from pydantic import ValidationError
 
-from core.config import settings
-from ssh.runner import LocalRunner, RemoteRunner
+from config.config import settings
+from runners.runner import LocalRunner, RemoteRunner
 from schemas import Servers
 
 
 async def run_module(module_name, runner):
+    """Run module from ./modules/ with name module_name using specified runner"""
     try:
+        # Module must have collect function
         module = importlib.import_module(f'modules.{module_name}')
         if hasattr(module, 'collect'):
             return await module.collect(runner)

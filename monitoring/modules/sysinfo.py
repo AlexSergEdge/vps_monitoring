@@ -1,5 +1,5 @@
 # System module to collect system info from server
-from ssh.runner import Runner
+from runners.runner import Runner
 
 
 async def collect(runner: Runner):
