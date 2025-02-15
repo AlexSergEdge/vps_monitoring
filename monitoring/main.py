@@ -1,4 +1,5 @@
 import asyncio
+import datetime
 import importlib
 import yaml
 
@@ -49,7 +50,14 @@ async def collect_data():
             collected_data = await run_module(module, runner)
             result_pool.append(collected_data)
 
-        result_list.append(f'Info for {server.name}\n\n{"\n".join(result_pool)}')
+        timestamp = datetime.datetime.now().strftime('%H:%M:%S %d-%m-%Y')
+
+        # If we want to get our current machine ip, we can use this hack
+        if server.ip in ['localhost', '127.0.0.1']:
+            local_server_ip = await run_module('ipinfo', runner)
+            server.ip += f' ({local_server_ip})'
+
+        result_list.append(f'{timestamp}\nInfo for {server.name} with ip {server.ip}\n\n{"\n".join(result_pool)}')
     return result_list
 
 
