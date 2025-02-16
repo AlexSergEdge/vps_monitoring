@@ -84,7 +84,14 @@ async def set_scheduled_message(update: Update, context: ContextTypes.DEFAULT_TY
                     
         job_name = get_job_name(chat_id)
         removed_job = remove_job_if_exists(job_name, context)
-        context.job_queue.run_repeating(callback=get_data_scheduled, interval=interval, chat_id=chat_id, name=job_name, data=interval)
+        # job_kwargs={'misfire_grace_time': None} - is requred to fix schedule errors
+        # sometimes schedule is late by some seconds, withput this param set to None it will not fire at all
+        context.job_queue.run_repeating(callback=get_data_scheduled, 
+                                        interval=interval, 
+                                        chat_id=chat_id, 
+                                        name=job_name, 
+                                        data=interval, 
+                                        job_kwargs={'misfire_grace_time': None})
         
         if removed_job:
             await update.effective_message.reply_text("Timer was updated! (already existed)")
