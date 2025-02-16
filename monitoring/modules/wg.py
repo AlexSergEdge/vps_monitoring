@@ -1,12 +1,16 @@
-# System module to collect system info from server
 from runners.runner import Runner
 
-WG_EMOJI = '\U0001f5ff'
+# Emojis for prettier text
+DRAGON_EMOJI = '\U0001F409'
 GREEN_ROUND_EMOJI = '\U0001f7e2'
 RED_ROUND_EMOJI = '\U0001f534'
 
+# TODO: provide verbose as option for collect functions to get more data
+VERBOSE = False
+
 
 def wg_info_result_to_json(result):
+    # Convert plain text output of wg show command into json
     interfaces = []
     current_interface = None
     current_peer = None
@@ -22,6 +26,7 @@ def wg_info_result_to_json(result):
                 "peers": []
             }
             interfaces.append(current_interface)
+            # If new interface is found - current peer resets
             current_peer = None
         elif line.startswith("peer:"):
             if current_interface is None:
@@ -31,6 +36,7 @@ def wg_info_result_to_json(result):
             current_interface["peers"].append(peer_details)
             current_peer = peer_details
         else:
+            # if no key value is present - skip
             if ":" not in line:
                 continue
             key, value = line.split(":", 1)
@@ -38,32 +44,40 @@ def wg_info_result_to_json(result):
             value = value.strip()
             if value.isdigit():
                 value = int(value)
+            # Allowed ips are respresented as list
             elif key == "allowed ips":
                 value = [ip.strip() for ip in value.split(",")]
+            # Save current peer params
             if current_peer is not None:
                 current_peer[key] = value
+            # Save current interface params (current peer is None)
             elif current_interface is not None:
                 current_interface[key] = value
+    
     return interfaces
 
 
 async def collect(runner: Runner):
-
-    message = f'- WG status info {WG_EMOJI}:\n'
+    message = f'- <b>WG status info {DRAGON_EMOJI}:</b>\n'
     command = 'wg show'
     result = await runner.run(command)
 
-    if result:
-        message += f'{GREEN_ROUND_EMOJI} Running'
-    else:
-        message += f'{RED_ROUND_EMOJI} Not running'
+    if not result:
+        message += f'{RED_ROUND_EMOJI} Not running :(\n'
         return message
+    
+    message += f'{GREEN_ROUND_EMOJI} Running :)\n'
 
-    result_list = wg_info_result_to_json(result)
-    for interface in result_list:
-        message += f'\nInterface {interface['interface']}'
-        for peer in interface['peers']:
-            message += f'\nPeer {peer['peer']}, latest hadshake {peer.get('latest handshake', 'unknown')}, transfer {peer.get('transfer', 'unknown')}'
+    # TODO: provide this as option (now it is hardcoded into False)
+    # now it is turned off, just status of wg itself showed
+    if VERBOSE:
+        result_list = wg_info_result_to_json(result)
+        for interface in result_list:
+            message += f'\n<b>{interface['interface']} interface</b> peers:'
+            for peer in interface['peers']:
+                message += f'\n - <b>{peer['peer'][:6]}...</b>'
+                if peer.get('latest handshake') and peer.get('transfer'):
+                    message += f' : <code>{peer['transfer']}, latest handshake {peer['latest handshake']}</code>'
 
     return message
 

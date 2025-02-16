@@ -4,7 +4,9 @@ from functools import wraps
 
 from config.config import settings
 from telegram import Update, Bot
+from telegram.constants import ParseMode
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
+
 
 from main import collect_data
 
@@ -39,16 +41,16 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
 @restricted_access
 async def get_data_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await update.message.reply_text('Gathering data from servers, this can take some time')
+    await update.message.reply_text('Getting data from servers. This can take some time...')
     result_list = await collect_data()
     for message in result_list:
-        await update.message.reply_text(message)
+        await update.message.reply_text(message, parse_mode=ParseMode.HTML)
 
 
 async def get_data_scheduled(context: ContextTypes.DEFAULT_TYPE) -> None:
     result_list = await collect_data()
     for message in result_list:
-        await context.bot.send_message(context.job.chat_id, text=message)
+        await context.bot.send_message(context.job.chat_id, text=message, parse_mode=ParseMode.HTML)
 
 
 def get_job_name(chat_id):

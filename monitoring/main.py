@@ -8,6 +8,7 @@ from pydantic import ValidationError
 from config.config import settings
 from runners.runner import LocalRunner, RemoteRunner
 from schemas import Servers
+from constants.constants import CLOCK_EMOJI
 
 
 async def run_module(module_name, runner):
@@ -59,7 +60,7 @@ async def collect_data():
             local_server_ip = await run_module('ipinfo', runner)
             server.ip += f' ({local_server_ip})'
 
-        result_list.append(f'{timestamp}\nInfo for {server.name} with ip {server.ip}\n\n{"\n".join(result_pool)}')
+        result_list.append(f'{CLOCK_EMOJI} {timestamp}\nHost: <b>{server.name}</b>\nIP: {server.ip}\n\n{"\n".join(result_pool)}')
     return result_list
 
 

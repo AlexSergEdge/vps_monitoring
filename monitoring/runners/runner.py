@@ -31,12 +31,13 @@ class LocalRunner(Runner):
 
     async def run(self, command: str) -> None:
         process = await asyncio.create_subprocess_shell(
-            command,
+            command,  # Note that running command as non-root may result in Permission denied erorr or password prompt (if command has sudo) 
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE
         )
         stdout, stderr = await process.communicate()
         if process.returncode != 0:
             print(f'Process exited with error: {stderr.decode()}')
+            return None  # TODO: think how to better handle situations when command exists but returns None, and when there is error
 
         return stdout.decode()
