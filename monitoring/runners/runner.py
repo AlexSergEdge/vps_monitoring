@@ -1,6 +1,7 @@
 import asyncio
 import asyncssh
 import sys
+from loguru import logger
 
 
 # TODO: add run for later implementation
@@ -23,8 +24,8 @@ class RemoteRunner(Runner):
                 result = await conn.run(command, check=True)
                 return result.stdout
             except asyncssh.ProcessError as exc:
-                print(exc.stderr, end='')
-                print(f'Process exited with status {exc.exit_status}', file=sys.stderr)
+                logger.error(f"{exc.stderr}")
+                logger.error(f'Process exited with status {exc.exit_status}')
 
 
 class LocalRunner(Runner):
@@ -37,7 +38,7 @@ class LocalRunner(Runner):
         )
         stdout, stderr = await process.communicate()
         if process.returncode != 0:
-            print(f'Process exited with error: {stderr.decode()}')
+            logger.error(f'Process exited with error: {stderr.decode()}')
             return None  # TODO: think how to better handle situations when command exists but returns None, and when there is error
 
         return stdout.decode()

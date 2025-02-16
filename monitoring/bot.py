@@ -1,5 +1,5 @@
-import logging
 
+from loguru import logger
 from functools import wraps
 
 from config.config import settings
@@ -11,19 +11,13 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters, C
 from main import collect_data
 
 
-# TODO: logging
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
-)
-
-
 def restricted_access(func):
     """Allow access only for user/group ids from ALLOWED_USERS list"""
     @wraps(func)
     async def wrapper(update, context, *args, **kwargs):
         user_id = update.effective_user.id
         if str(user_id) not in settings.ALLOWED_USERS:
-            print(f'Unauthorized user tried to access bot: {user_id}')
+            logger.warning(f'Unauthorized user tried to access bot: {user_id}')
             return
         return await func(update, context, *args, **kwargs)
     return wrapper
@@ -130,7 +124,7 @@ async def unset_scheduled_message(update: Update, context: ContextTypes.DEFAULT_
 
 
 if __name__ == '__main__':
-    print('Starting')
+    logger.info('Starting')
     app = Application.builder().token(settings.TELEGRAM_ACCESS_TOKEN).build()
     
     app.add_handler(CommandHandler('start', start_command))  # to run async use block=False
@@ -141,5 +135,5 @@ if __name__ == '__main__':
     app.add_handler(CommandHandler('getshedule', get_current_shedules))
 
 
-    print('Polling')
+    logger.info('Polling')
     app.run_polling(poll_interval=3)

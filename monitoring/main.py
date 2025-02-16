@@ -3,12 +3,14 @@ import datetime
 import importlib
 import yaml
 
+
+from loguru import logger
 from pydantic import ValidationError
 
 from config.config import settings
 from runners.runner import LocalRunner, RemoteRunner
 from schemas import Servers
-from constants.constants import CLOCK_EMOJI, LOCALHOST_ADDRESSES
+from vps_monitoring.monitoring.constants import CLOCK_EMOJI, LOCALHOST_ADDRESSES
 
 
 async def run_module(module_name, runner):
@@ -19,9 +21,9 @@ async def run_module(module_name, runner):
         if hasattr(module, 'collect'):
             return await module.collect(runner)
         else:
-            print(f"Module '{module_name}' has no 'collect' method.")
+            logger.warning(f"Module '{module_name}' has no 'collect' method.")
     except ModuleNotFoundError:
-        print(f"Module '{module_name}' not found.")
+        logger.error(f"Module '{module_name}' not found.")
 
 
 async def collect_data():
@@ -33,7 +35,7 @@ async def collect_data():
     try:
         valid_servers = Servers(**servers)
     except ValidationError as e:
-        print(f'Config is invalid! {e}')  # TODO: more info on error
+        logger.error(f'Config is invalid! {e}')  # TODO: more info on error
         return
 
     for server in valid_servers.servers:
@@ -48,7 +50,7 @@ async def collect_data():
         elif server.ip in LOCALHOST_ADDRESSES:
             runner = LocalRunner()
         else:
-            print(f'Invalid config for {server.ip}! Remote server must have ssh connection info!')
+            logger.error(f'Invalid config for {server.ip}! Remote server must have ssh connection info!')
             continue
         
         result_pool = []
@@ -68,4 +70,4 @@ async def collect_data():
 
 
 if __name__ == '__main__':
-    print(asyncio.run(collect_data()))
+    logger.info(asyncio.run(collect_data()))
