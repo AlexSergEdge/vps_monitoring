@@ -8,7 +8,7 @@ from pydantic import ValidationError
 from config.config import settings
 from runners.runner import LocalRunner, RemoteRunner
 from schemas import Servers
-from constants.constants import CLOCK_EMOJI
+from constants.constants import CLOCK_EMOJI, LOCALHOST_ADDRESSES
 
 
 async def run_module(module_name, runner):
@@ -45,8 +45,11 @@ async def collect_data():
                 username=server.ssh.ssh_user,
                 key=server.ssh.ssh_privkey_path
             )
-        else:
+        elif server.ip in LOCALHOST_ADDRESSES:
             runner = LocalRunner()
+        else:
+            print(f'Invalid config for {server.ip}! Remote server must have ssh connection info!')
+            continue
         
         result_pool = []
         for module in server.modules:
@@ -56,7 +59,7 @@ async def collect_data():
         timestamp = datetime.datetime.now().strftime('%H:%M:%S %d-%m-%Y')
 
         # If we want to get our current machine ip, we can use this hack
-        if server.ip in ['localhost', '127.0.0.1']:
+        if server.ip in LOCALHOST_ADDRESSES:
             local_server_ip = await run_module('ipinfo', runner)
             server.ip += f' ({local_server_ip})'
 

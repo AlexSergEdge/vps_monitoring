@@ -21,7 +21,7 @@ def convert_date(date_str):
     return dt.strftime('%H:%M:%S %d-%m-%Y')
 
 
-async def collect(runner: Runner):
+async def collect(runner: Runner) -> str:
 
     result = f'- <b>OL status info {GLOBE_EMOJI}:</b>\n'
 

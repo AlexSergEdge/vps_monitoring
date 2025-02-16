@@ -57,7 +57,7 @@ def wg_info_result_to_json(result):
     return interfaces
 
 
-async def collect(runner: Runner):
+async def collect(runner: Runner) -> str:
     message = f'- <b>WG status info {DRAGON_EMOJI}:</b>\n'
     command = 'wg show'
     result = await runner.run(command)

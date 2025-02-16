@@ -4,7 +4,7 @@ from runners.runner import Runner
 CPU_MEM_EMOJI = '\U0001F4BB'
 SMALL_WHITE_SQUARE_POINT = '\U000025AB'
 
-async def collect(runner: Runner):
+async def collect(runner: Runner) -> str:
 
     command = 'top -b -n 1 | grep "%Cpu(s)\\|MiB Mem"'
     result = await runner.run(command)

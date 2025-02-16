@@ -1,16 +1,36 @@
 ---
 # Example config
 servers:
-  - ip: x.x.x.x
-    name: 'Server 1'
-    ssh:  # is optional
+  - ip: 192.168.0.1
+    name: host1
+    ssh:
       ssh_port: 22
       ssh_user: 'user'
-      ssh_privkey_path: '/path/to/key'
+      ssh_privkey_path: '/path/to/private/ssh/key'
     modules:
       - 'sysinfo'
+      - 'wg'
+  
+  - ip: 192.168.0.2
+    name: host2
+    ssh:
+      ssh_port: 22
+      ssh_user: 'user'
+      ssh_privkey_path: '/path/to/private/ssh/key'
+    modules:
+      - 'sysinfo'
+      - 'ol'
+      - 'wg'
 
   - ip: localhost
-    name: 'LocalServer'
+    name: host3
+    modules:
+      - 'sysinfo'
+      - 'ol'
+
+  # This is invalid - ssh is required for remote connection
+  # This will be skipped and error shown i log
+  - ip: 192.168.0.100
+    name: somehost
     modules:
       - 'sysinfo'
