@@ -7,3 +7,6 @@ venv/
 # monitoring/modules/*
 # !monitoring/modules/ipinfo.py
 # !monitoring/modules/sysinfo.py
+
+.DS_Store
+
