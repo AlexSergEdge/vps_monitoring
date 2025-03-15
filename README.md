@@ -1,6 +1,14 @@
+> WIP: may be subject to change!!!
+
 # VPS monitoring
 
 ## How to use
+
+### Docker (WIP)
+
+```bash
+docker run --name monitoring-container -v ./ssh_keys:/app/ssh_keys:ro -v ./servers-prod.yml:/app/servers-prod.yml:ro -v ./.env:/app/.env:ro -v ~/.ssh/known_hosts:/app/known_hosts monitoring-bot
+```
 
 ### Environment variables
 
@@ -17,6 +25,8 @@ DEFAULT_CHECK_INTERVAL=3600  # default interval at which bot will send scheduled
 
 ### Servers configuration
 
+> NOTE: ssh keys must be placed in `./ssh-keys` directory!
+
 Example of `servers.yml` contents:
 
 ```yaml
@@ -26,7 +36,7 @@ servers:
     ssh:
       ssh_port: 22
       ssh_user: 'user'
-      ssh_privkey_path: '/path/to/private/ssh/key'
+      ssh_privkey_name: './ssh-keys/key'
     modules:
       - 'sysinfo'
       - 'wg'
@@ -36,7 +46,7 @@ servers:
     ssh:
       ssh_port: 22
       ssh_user: 'user'
-      ssh_privkey_path: '/path/to/private/ssh/key'
+      ssh_privkey_name: './ssh-keys/key'
     modules:
       - 'sysinfo'
       - 'ol'

@@ -39,11 +39,12 @@ async def collect_data():
     for server in valid_servers.servers:
         runner = None
         if server.ssh:
+            privkey = f'{settings.SSH_KEYS_APP_PATH}/{server.ssh.ssh_privkey_name}'
             runner = RemoteRunner(
                 ip_addr=server.ip,
                 port=server.ssh.ssh_port,
                 username=server.ssh.ssh_user,
-                key=server.ssh.ssh_privkey_path
+                key=privkey
             )
         elif server.ip in LOCALHOST_ADDRESSES:
             runner = LocalRunner()

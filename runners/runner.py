@@ -2,6 +2,7 @@ import asyncio
 import asyncssh
 import sys
 
+from config.config import settings
 
 # TODO: add run for later implementation
 class Runner():
@@ -17,8 +18,11 @@ class RemoteRunner(Runner):
         self.key = key
 
     async def run(self, command: str) -> None:
+        # We use volume to get access to known hosts file, so we do not have to scan for keys inside container
+        # each time new server is added to config
+        # TODO: add no-docker execution
         async with asyncssh.connect(self.ip_addr, port=self.port, username=self.username
-                                    , client_keys=[self.key]) as conn:
+                                    , client_keys=[self.key], known_hosts=settings.KNOWN_HOSTS_APP_PATH) as conn:
             try:
                 result = await conn.run(command, check=True)
                 return result.stdout

@@ -2,8 +2,7 @@ servers-prod.yml
 *.pyc
 __pycache__
 venv/
-.env
+.env  
 .vscode/
-# monitoring/modules/*
-# !monitoring/modules/ipinfo.py
-# !monitoring/modules/sysinfo.py
+!ssh_keys/.gitkeep
+ssh_keys
