@@ -19,10 +19,12 @@ RUN apt-get update && \
     groupadd -g ${GID} ${APPGROUP} && \
     useradd -u ${UID} -g ${APPGROUP} -m -d ${APPUSER_HOME} ${APPUSER}
 
+# Dependencies change less than code - so move it up
+COPY ./requirements.txt ./
+RUN pip install -r requirements.txt
+
 # Note that persmissions nust be set for current user that runs docker run
 ADD . /app
-
-RUN pip install --no-cache-dir -r requirements.txt
 
 RUN chmod +x /app/entrypoint.sh
 
