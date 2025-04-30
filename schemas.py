@@ -8,7 +8,7 @@ from pydantic import BaseModel
 class SshConnInfo(BaseModel):
     ssh_port: int
     ssh_user: str
-    ssh_privkey_path: str
+    ssh_privkey_name: str
 
 
 class Server(BaseModel):

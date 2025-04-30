@@ -1,2 +1,0 @@
-CLOCK_EMOJI = '\U0001F55C'
-LOCALHOST_ADDRESSES = ('localhost', '127.0.0.1')

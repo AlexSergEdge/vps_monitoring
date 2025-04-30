@@ -6,7 +6,7 @@ servers:
     ssh:
       ssh_port: 22
       ssh_user: 'user'
-      ssh_privkey_path: '/path/to/private/ssh/key'
+      ssh_privkey_name: 'host1_key'
     modules:
       - 'sysinfo'
       - 'wg'
@@ -16,21 +16,23 @@ servers:
     ssh:
       ssh_port: 22
       ssh_user: 'user'
-      ssh_privkey_path: '/path/to/private/ssh/key'
+      ssh_privkey_name: 'host2_key'
     modules:
       - 'sysinfo'
       - 'ol'
       - 'wg'
 
-  - ip: localhost
-    name: host3
-    modules:
-      - 'sysinfo'
-      - 'ol'
+  # Do not use it in docker! SSH to the same machine in that case
+  # But if it runs outside of docker - it is ok
+  # - ip: localhost
+  #   name: host3
+  #   modules:
+  #     - 'sysinfo'
+  #     - 'ol'
 
   # This is invalid - ssh is required for remote connection
   # This will be skipped and error shown i log
-  - ip: 192.168.0.100
-    name: somehost
-    modules:
-      - 'sysinfo'
+  # - ip: 192.168.0.100
+  #   name: somehost
+  #   modules:
+  #     - 'sysinfo'

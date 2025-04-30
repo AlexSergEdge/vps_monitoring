@@ -1,0 +1,15 @@
+version: "3.3"
+
+services:
+  monitoring:
+    image: monitoring-bot
+    environment:
+      - UID=${HOST_UID}
+      - GID=${HOST_GID}
+      - KNOWN_HOSTS_APP_PATH=${KNOWN_HOSTS_APP_PATH}
+      - SSH_KEYS_APP_PATH=${SSH_KEYS_APP_PATH}
+    volumes:
+      - ${SSH_KEYS_PATH}:${SSH_KEYS_APP_PATH}:ro
+      - ./servers-prod.yml:/app/servers-prod.yml:ro
+      - ./.env:/app/.env:ro
+      - ${KNOWN_HOSTS_PATH}:${KNOWN_HOSTS_APP_PATH}:ro
